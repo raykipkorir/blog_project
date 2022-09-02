@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home Page
+{% endblock title %}
+
+{% block content %}
+
+{% for post in posts %}
+ <div class="content">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="shadow p-3 mb-2 bg-body rounded">    
+                <div>
+                    <img src="{{ post.user.profile.image.url }}" alt="" width = "30px" height = "30px">
+                    <a href = "{% url 'users:user_profile' post.user.username %}"> <strong>{{ post.user|capfirst }}</strong></a>
+                    <small> {{ post.date_posted|date:"F d, Y" }} </small>
+                </div>
+                <h3><a href="{{ post.get_absolute_url }}"> {{ post.title }}</a></h3>
+                <p> {{ post.content|truncatewords:15}} <a href="{{post.get_absolute_url}}">Read more</a></p>               
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% if is_paginated %}
+<div class="col-md-6 offset-md-3">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a></li>
+            {% endif %}
+
+            {% for page in paginator.page_range %}
+            {% if page_obj.number == page %}
+            <li class="page-item active"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Page not found
+{% endblock title %}
+
+{% block content %}
+<h2> This page does not exist</h2>
+<a href="{% url "blog:blog-home" %}">Return to Home page</a>
+{% endblock content %}

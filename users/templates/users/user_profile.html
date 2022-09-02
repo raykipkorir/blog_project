@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Profile Page
+{% endblock title %}
+
+{% block content %}
+<!-- User details card -->
+<div class="container py-1 h-100">
+   <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10 col-xl-7">
+         <div class="card">
+            <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+               <div class="ms-5 mt-6 d-flex flex-column" style="width: 150px;">
+                  <img src="{{ user_profile.image.url }}"
+                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                     style="width: 150px; z-index: 1">
+                  {% if user.profile == user_profile %}
+                  <a href="{% url 'users:user_profile_update' %}" class="btn btn-secondary">
+                  Edit profile
+                  </a>
+                  {% endif %}
+               </div>
+               <div class="ms-2" style="margin-top: 130px;">
+                  <h5>{{ user_profile.user.username }}</h5>
+                  <p>{{ user_profile.city }}</p>
+               </div>
+            </div>
+            <div class="card-body p-4 text-black">
+               <div class="mb-2">
+                  <p class="lead fw-normal mb-1">Bio</p>
+                  <div class="p-2" style="background-color: #f8f9fa;">
+                     <p class="font-italic mb-1">{{ user_profile.bio }}</p>
+                  </div>
+               </div>
+               <div class="mb-1">
+                  <p class="lead fw-normal mb-1"> Email</p>
+                  <div class="p-2" style="background-color: #f8f9fa;">
+                     <p class="font-italic mb-1"><a href="mailto:{{ user_profile.user.email }}">{{ user_profile.user.email }}</a></p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="row">
+  <!-- Skills -->
+  <div class="col-4" >
+    <div class="card" style="margin-left: 210px;">
+      <div class="card-body" >
+        <h5 class="card-title">Skills</h5>
+        <ul>
+          <li>HTML</li>
+          <li>PYTHON</li>
+          <li>JAVASCRIPT</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- User posts -->
+  <div class="col-8">
+    {% if posts %}
+    {% for post in posts %}
+    <div class="shadow p-3 mb-2 bg-body rounded" style="margin-right: 210px;">
+      <img src="{{ user_profile.image.url }}" alt="" width="30px" height="30px">
+      <a href = "{% url 'users:user_profile' post.user.username %}"> <strong>{{ post.user.username|capfirst }}</strong></a>
+      <small> {{ post.date_posted|date:"F d, Y" }} </small>
+      {% if user == post.user %}
+      <a href="{% url 'blog:post-update' post.slug %}">Edit</a>
+      <a href="{% url 'blog:post-delete' post.slug %}", style="color:red;">Delete</a>
+      {% endif %}
+      <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+      <p> {{ post.content}} </p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <body>
+        <h3>NO POSTS</h3>
+    </body>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

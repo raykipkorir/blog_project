@@ -1,0 +1,21 @@
+{% extends 'users/settings.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Delete Account Page
+{% endblock title %}
+
+{% block settings-title %}
+DELETE ACCOUNT
+{% endblock settings-title %}
+
+{% block settings-form %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <p class="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
+    </div>
+    <input type="submit" class="btn btn-danger" value="Delete Account">  
+    <a href="{% url "users:user_update" user.id %}" class="btn btn-outline-secondary">Back</a>
+</form>
+{% endblock settings-form %}

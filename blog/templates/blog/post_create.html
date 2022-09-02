@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Create Post
+{% endblock title %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class = "btn btn-primary" value = "Post">  
+        <a href="{% url "users:user_profile" user.username %}" class = "btn btn-outline-secondary">Back</a>
+    </form>
+</div>
+{% endblock content %}
