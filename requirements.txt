@@ -11,7 +11,9 @@ colorama==0.4.5
 crispy-bootstrap5==0.6
 Deprecated==1.2.13
 Django==4.0.6
+django-ckeditor==6.5.1
 django-crispy-forms==1.14.0
+django-js-asset==2.0.0
 kombu==5.2.4
 mypy-extensions==0.4.3
 packaging==21.3

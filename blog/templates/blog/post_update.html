@@ -9,6 +9,7 @@ Update Post
 <div class="col-md-6 offset-md-3">
     <form action="" method="post">
         {% csrf_token %}
+        {{ form.media }}
         {{ form|crispy }}
         <input type="submit" class = "btn btn-primary" value = "Save changes">
         <a href="{% url 'users:user_profile' user.username %}" class="btn btn-outline-dark">Back</a>
