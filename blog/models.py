@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from blog_project.util import unique_slug_generator
+from ckeditor.fields import RichTextField
 
 User = get_user_model()
 
@@ -13,7 +14,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=50, null=True, blank=True)
     title = models.CharField(max_length=50)
-    content = models.TextField()
+    content = RichTextField()
     date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

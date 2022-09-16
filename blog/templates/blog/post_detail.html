@@ -19,7 +19,7 @@ Post Detail
                     {% endif %}
                 </div>
                 <h3>{{ post.title }}</h3>
-                <p> {{ post.content}} </p>
+                <p> {{ post.content|safe }} </p>
             </div>
         </div>
     </div>

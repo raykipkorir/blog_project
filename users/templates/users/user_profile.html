@@ -73,7 +73,7 @@ Profile Page
       <a href="{% url 'blog:post-delete' post.slug %}", style="color:red;">Delete</a>
       {% endif %}
       <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-      <p> {{ post.content}} </p>
+      <p> {{ post.content|safe }} </p>
     </div>
     {% endfor %}
     {% else %}
