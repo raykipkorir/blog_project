@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     
     #local apps
     'blog.apps.BlogConfig',
@@ -23,6 +24,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'ckeditor',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -51,21 +56,39 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+                'django.contrib.messages.context_processors.messages',            ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
+#authentication
 AUTH_USER_MODEL = "users.User"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "users.email_auth_backends.EmailAuthBackend"
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google':{
+        'APP':{
+            'client_id':config('CLIENT_ID'),
+            'secret':config('CLIENT_SECRET'),
+        },
+        'SCOPE':[
+            'profile',
+            'email',
+            'openid',
+        ],
+
+    }
+}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_MAX_EMAIL_ADDRESSES = 3
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
 

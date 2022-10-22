@@ -17,7 +17,7 @@ Profile Page
                      alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                      style="width: 150px; z-index: 1">
                   {% if user.profile == user_profile %}
-                  <a href="{% url 'users:user_profile_update' %}" class="btn btn-secondary">
+                  <a href="{% url 'user_profile_update' %}" class="btn btn-secondary">
                   Edit profile
                   </a>
                   {% endif %}
@@ -66,7 +66,7 @@ Profile Page
     {% for post in posts %}
     <div class="shadow p-3 mb-2 bg-body rounded" style="margin-right: 210px;">
       <img src="{{ user_profile.image.url }}" alt="" width="30px" height="30px">
-      <a href = "{% url 'users:user_profile' post.user.username %}"> <strong>{{ post.user.username|capfirst }}</strong></a>
+      <a href = "{% url 'user_profile' post.user.username %}"> <strong>{{ post.user.username|capfirst }}</strong></a>
       <small> {{ post.date_posted|date:"F d, Y" }} </small>
       {% if user == post.user %}
       <a href="{% url 'blog:post-update' post.slug %}">Edit</a>

@@ -1,65 +1,26 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views.generic import DeleteView, UpdateView
-from django.template.loader import render_to_string
-
-from blog_project import settings
+from allauth.account.views import EmailView
+from allauth.account.forms import AddEmailForm
 from blog.models import Post
 from .models import Profile
-from .forms import ProfileUpdateForm, UserRegisterForm, UserUpdateForm
+from .forms import ProfileUpdateForm, UserUpdateForm
 
 User = get_user_model()
 
-def register(request):
-    if not request.user.is_authenticated:
-        if request.method == "POST":
-            form = UserRegisterForm(request.POST)
-            if form.is_valid():
-                form.save()
-                content = render_to_string("users/email_confirmation_template.html", {"form":form}, request)
-                email = EmailMessage(
-                subject="Thank you",
-                body=content,
-                from_email=settings.EMAIL_HOST_USER,
-                to=[form.instance.email],
-                )
-                email.send(fail_silently=False)
-                user = authenticate(
-                    username=form.cleaned_data["username"],
-                    password=form.cleaned_data["password1"],
-                )
-                if user is not None:
-                    login(request, user)
-                    messages.success(request, "Account created successfully!!")
-                    return redirect("blog:blog-home")
-        else:
-            form = UserRegisterForm()
-        return render(request, "users/user_create.html", {"form": form})
-    else:
-        return redirect(reverse("blog:blog-home"))
-
-class UserLoginView(LoginView):
-    template_name = "users/login.html"
-    redirect_authenticated_user = True
-
-    def form_valid(self, form):
-        messages.success(self.request, message="Logged in successfully!!!")
-        return super().form_valid(form)
-
-@login_required()
 def profile(request, username):
     user_profile = Profile.objects.get(user__username=username)
     posts = Post.objects.filter(user=user_profile.user)
     context = {"user_profile":user_profile, "posts":posts}
     return render(request, "users/user_profile.html", context)
-
 
 @login_required()
 def EditProfile(request):
@@ -69,25 +30,52 @@ def EditProfile(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profile Updated successfully!!")
-            return redirect("users:user_profile_update")
+            return redirect("user_profile_update")
     else:
         form = ProfileUpdateForm(instance=profile)
     context = {"form": form}
     return render(request, "users/user_profile_update.html", context)
 
-class UserUpdateView(LoginRequiredMixin,UserPassesTestMixin,SuccessMessageMixin,UpdateView):
-    model = User
+# class UserUpdateView(LoginRequiredMixin,UserPassesTestMixin,SuccessMessageMixin,UpdateView):
+#     model = User
+#     http_method_names = ["POST"]
+#     template_name = "users/user_update.html"
+#     form_class = UserUpdateForm
+#     success_message = "Account updated successfully"
+
+#     def test_func(self):
+#         user = self.get_object()
+#         if self.request.user == user:
+#             return True
+#         else:
+#             return False
+# user_update = UserUpdateView.as_view()
+
+class UserEmailView(EmailView):
+    success_url = reverse_lazy("user_update")
     template_name = "users/user_update.html"
-    form_class = UserUpdateForm
-    success_message = "Account updated successfully"
 
-    def test_func(self):
-        user = self.get_object()
-        if self.request.user == user:
-            return True
-        else:
-            return False
+    def form_invalid(self, form):
+        messages.error(self.request, "Email not available")
+        return redirect("user_update")
+email_view = UserEmailView.as_view()
 
+@login_required()
+def account_update(request):
+    user = User.objects.get(pk=request.user.id)
+    if request.method == "POST" and "user_update" in request.POST:
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Account updated successfully")
+            return redirect(reverse_lazy("user_update"))
+    elif ("action_add" in request.POST or "action_send" in request.POST or "action_primary" in request.POST or "action_remove" in request.POST) and request.method == "POST":
+        return email_view(request)
+    else:
+        user_form = UserUpdateForm(instance=user)
+        add_email_form = AddEmailForm()
+        context= {"user_form":user_form, "add_email_form":add_email_form}
+        return render(request, "users/user_update.html", context)
 
 class UserDeleteView(LoginRequiredMixin,UserPassesTestMixin,SuccessMessageMixin,DeleteView):
     model = User

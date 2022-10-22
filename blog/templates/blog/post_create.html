@@ -12,7 +12,7 @@ Create Post
         {{ form.media }}
         {{ form|crispy }}
         <input type="submit" class = "btn btn-primary" value = "Post">  
-        <a href="{% url "users:user_profile" user.username %}" class = "btn btn-outline-secondary">Back</a>
+        <a href="{% url "user_profile" user.username %}" class = "btn btn-outline-secondary">Back</a>
     </form>
 </div>
 {% endblock content %}
