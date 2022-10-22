@@ -12,7 +12,7 @@ Update Post
         {{ form.media }}
         {{ form|crispy }}
         <input type="submit" class = "btn btn-primary" value = "Save changes">
-        <a href="{% url 'users:user_profile' user.username %}" class="btn btn-outline-dark">Back</a>
+        <a href="{% url 'user_profile' user.username %}" class="btn btn-outline-dark">Back</a>
     </form>
 </div>
 {% endblock content %}

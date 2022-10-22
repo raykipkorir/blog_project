@@ -1,6 +1,6 @@
 __pycache__/
 .vscode/
 db.sqlite3
-media/
+profile_pics/
 venv/
 .env

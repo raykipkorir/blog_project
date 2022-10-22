@@ -21,19 +21,22 @@
               </a>
               <ul class="dropdown-menu">
                  <li><a class="dropdown-item" href="{% url 'blog:post-create' %}">Create Post</a></li>
-                 <li><a class="dropdown-item" href="{% url 'users:user_profile' user.username %}">Profile</a></li>
+                 <li><a class="dropdown-item" href="{% url 'user_profile' user.username %}">Profile</a></li>
                  <li>
                     <hr class="dropdown-divider">
                  </li>
-                 <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
+                 <form action="{% url 'account_logout' %}" method="post">
+                     {% csrf_token %}
+                     <input value="Logout" type="submit">
+                 </form>
               </ul>
            </li>
            {% else %}
            <li class="nav-item">
-              <a class="nav-link" href="{% url 'users:login' %}">Login</a>
+              <a class="nav-link" href="{% url 'account_login' %}">Login</a>
            </li>
            <li class="nav-item">
-              <a class="nav-link" href="{% url 'users:user_create' %}">Sign Up</a>
+              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
            </li>
            {% endif %}
         </ul>

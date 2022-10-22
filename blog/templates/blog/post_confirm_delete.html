@@ -11,7 +11,7 @@ Delete Post
         {% csrf_token %}
         <p>Are you sure you want to Delete the post <strong>"{{ post.title }}"</strong> ? This action can't be undone.</p>
         <input type="submit" class = "btn btn-danger" value = "Delete Post">  
-        <a href="{% url "users:user_profile" user.username %}" class = "btn btn-outline-secondary">Back</a>
+        <a href="{% url "user_profile" user.username %}" class = "btn btn-outline-secondary">Back</a>
     </form>
 </div>
 {% endblock content %}

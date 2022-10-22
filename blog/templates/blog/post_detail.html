@@ -11,7 +11,7 @@ Post Detail
             <div class="shadow p-3 mb-2 bg-body rounded">
                 <div>
                     <img src="{{ post.user.profile.image.url }}" alt="" width = "30px" height = "30px">
-                    <a href = "{% url 'users:user_profile' post.user.username %}"> <strong>{{ post.user.username|capfirst }}</strong></a>
+                    <a href = "{% url 'user_profile' post.user.username %}"> <strong>{{ post.user.username|capfirst }}</strong></a>
                     <small> {{ post.date_posted|date:"F d, Y" }} </small>
                     {% if user == post.user %}       
                     <a href="{% url 'blog:post-update' post.slug %}">Edit</a>

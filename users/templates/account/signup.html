@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+
+{% block title %}
+Register Page
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="col-md-6 offset-md-3">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Register" class="btn btn-outline-success">
+        </form>
+        <p style="color:#00000080; margin-top:10px;">OR</p> 
+        <form action="{% provider_login_url "google" %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;"
+            type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
+          </form>
+        <div>
+            <p>Already have an account? <a class="ml-10" href="{% url 'account_login' %}">Sign in</a></p>
+        </div>
+    </div>
+</div>
+{% endblock content %}
